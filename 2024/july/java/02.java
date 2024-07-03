@@ -1,24 +1,20 @@
 class Solution {
-    public int[] intersect(int[] a, int[] b) {
-        int sz1 = a.length;
-        int sz2 = b.length;
-        int [] f1 = new int [1001];
-        int [] f2 = new int[1001];
-        for (int cur : a) f1[cur]++;
-        for (int cur : b) f2[cur]++;
+    private static int SZ;
+    private int solveOneStep(int [] uniq){
+        return Math.min(uniq[SZ-1]- uniq[1] , uniq[SZ-2] - uniq[0]);
+    } 
 
-        ArrayList<Integer > ans = new ArrayList<>();
-        for (int i = 0; i <= 1000; ++i){
-            int cur = Math.min(f1[i] , f2[i]);
-            for (int k = 0; k < cur; ++k) ans.add(i);
-        }
+    private int solveTwoSteps(int [] uniq){
+        return Math.min(Math.min(uniq[SZ-3]-uniq[0] , uniq[SZ-1] - uniq[2]) , uniq[SZ-2] - uniq[1]);
+    }
 
-        sz1 = ans.size();
-        int [] aux = new int [sz1];
-        for (int i = 0; i < sz1; ++i) aux[i] = ans.get(i);
-        return aux;
-        
-
-
+    private int solveThreeSteps(int [] uniq){
+        return Math.min(Math.min(uniq[SZ-2]-uniq[2] , uniq[SZ-3]-uniq[1]) , Math.min(uniq[SZ-1]-uniq[3] , uniq[SZ-4]-uniq[0]));
+    }
+    public int minDifference(int[] a) {
+        Arrays.sort(a);
+        SZ = a.length;
+        if (SZ <= 4) return 0;
+        return Math.min(solveOneStep(a) , Math.min(solveTwoSteps(a) , solveThreeSteps(a)));
     }
 }
